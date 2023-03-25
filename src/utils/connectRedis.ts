@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
 
 const redisUrl = `redis://localhost:6379`;
-const redisClient = createClient({ url: redisUrl });
+const redisClient = createClient({ url: process.env.REDIS_URL });
 
 const connectRedis = async () => {
   try {
