@@ -8,6 +8,6 @@ COPY . /app
 
 RUN yarn install --frozen-lockfile --production
 
-#EXPOSE 5000
+EXPOSE 5000
 
-#RUN yarn dev
+RUN yarn dev
