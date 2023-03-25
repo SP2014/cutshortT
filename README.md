@@ -43,9 +43,66 @@ Request:
     password: ''
   }
 ```
-#### Profile
+### Profile
+
+#### Current User
 ```
 Endpoint: /me
 Authorization: Bearer <TOKEN FROM LOGIN>
 Method: GET
+```
+
+#### All Users (Admin privilege)
+```
+Endpoint: /
+Authorization: Bearer <TOKEN FROM LOGIN>
+Method: GET
+```
+
+### Todos
+
+#### Create
+```
+Endpoint: /api/todos
+Method: POST
+Request:
+  {
+    title: '',
+    description: ''
+  }
+```
+
+#### Edit
+```
+Endpoint: /api/todos/{todoId}
+Method: PUT
+Request:
+  {
+    title: '', // Optional
+    description: '', // Optional
+    completed: true/false // Optional
+  }
+```
+
+#### Delete
+```
+Endpoint: /api/todos/{todoId}
+Method: DELETE
+```
+
+#### Get All (Admin prevelige)
+```
+Endpoint: /api/todos
+Method: GET
+```
+
+#### Get Todo for user
+```
+Endpoint: /api/todos/user/{userId}
+Method: POST
+Request:
+  {
+    title: '',
+    description: ''
+  }
 ```
