@@ -3,27 +3,60 @@ import {
   createTodo,
   deleteTodo,
   toggleTodo,
+  editTodo,
   getTodos,
+  getTodoById,
 } from '../services/todos.service';
 import { IPaginateOptions } from 'typegoose-cursor-pagination';
 import { Dictionary } from 'lodash';
+import { CreateTodoInput } from '../schemas/todo.schema';
+import AppError from '../utils/appError';
+import { FilterQuery } from 'mongoose';
+import { Todos } from 'src/models/todos.model';
 
 export const addTodo = async (
-  req: Request,
+  req: Request<{}, {}, CreateTodoInput>,
   res: Response,
   next: NextFunction,
 ) => {
   try {
+    const user = res.locals.user;
     const todo = await createTodo({
       title: req.body.title,
       description: req.body.description,
-      userId: req.body.userId,
+      userId: user._id,
     });
     res.status(201).json({
       status: 'success',
       data: {
         todo,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getTodosForUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const options: IPaginateOptions = {
+    sortField: 'updatedAt',
+    sortAscending: true,
+    limit: 10,
+    next: req.query.next as string,
+  };
+  try {
+    const userId = req.params.userId as string;
+    var query: FilterQuery<Todos> = {};
+    Object.assign(query, { userId: userId });
+
+    const todos = await getTodos(query, options);
+    res.status(200).json({
+      status: 'success',
+      data: todos,
     });
   } catch (error) {
     next(error);
@@ -43,22 +76,15 @@ export const getAllTodos = async (
   };
 
   try {
-    console.log(req.query);
-    const admin = req.query.isAdmin as string;
-    const userId = req.query.userId as string;
-    const isAdmin = admin === 'true' ? true : false;
     var query: Dictionary<string> = {};
-
-    if (!isAdmin) {
-      Object.assign(query, { userId: userId });
-    }
-
     const todos = await getTodos(query, options);
     res.status(200).json({
       status: 'success',
       data: todos,
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const removeTodo = async (
@@ -73,19 +99,19 @@ export const removeTodo = async (
         msg: 'Wrong parameters!!!',
       });
     } else {
-      deleteTodo(req.params.id).then((v) => {
-        if (v != null) {
-          res.status(200).json({
-            status: 'success',
-            msg: 'Todo deleted!!!!',
-          });
-        } else {
-          res.status(400).json({
-            status: false,
-            msg: 'Todo not present',
-          });
-        }
-      });
+      const user = res.locals.user;
+      const oldTodo = await getTodoById(req.params.id);
+      if (oldTodo?.userId === user._id || user.role === 'admin') {
+        const d = await deleteTodo(req.params.id);
+        res.status(200).json({
+          status: 'success',
+          msg: 'Todo deleted!!!!',
+        });
+      } else {
+        return next(
+          new AppError('You are not allowed to perform this action', 403),
+        );
+      }
     }
   } catch (error) {
     next(error);
@@ -113,7 +139,7 @@ export const toggleStatus = async (
   }
 };
 
-export const editTodo = async (
+export const editTodoForUser = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -125,7 +151,20 @@ export const editTodo = async (
         msg: 'Wrong parameters!!!',
       });
     } else {
-      const { id } = req.params;
+      const user = res.locals.user;
+      const oldTodo = await getTodoById(req.params.id);
+      //console.log(oldTodo);
+      if (oldTodo?.userId === user._id || user.role === 'admin') {
+        editTodo(req.params.id, req.body).then(()=>{
+          res.status(200).json({
+            status: 'success'
+          });
+        });
+      } else {
+        return next(
+          new AppError('You are not allowed to perform this action', 403),
+        );
+      }
     }
   } catch (error) {
     next(error);

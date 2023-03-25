@@ -1,8 +1,10 @@
 import {
   getModelForClass,
+  index,
   modelOptions,
   plugin,
   prop,
+  Severity
 } from '@typegoose/typegoose';
 import paginationPlugin, { PaginateModel } from 'typegoose-cursor-pagination';
 
@@ -11,8 +13,12 @@ import paginationPlugin, { PaginateModel } from 'typegoose-cursor-pagination';
     // Add createdAt and updatedAt fields
     timestamps: true,
   },
+  options: {
+    allowMixed: Severity.ALLOW,
+  },
 })
 @plugin(paginationPlugin)
+@index({userId:1})
 export class Todos {
   @prop({ required: true, unique: true })
   title: string;

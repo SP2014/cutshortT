@@ -1,22 +1,45 @@
 import { Dictionary, omit } from 'lodash';
 import todosModel, { Todos } from '../models/todos.model';
-import { IPaginateOptions } from 'typegoose-cursor-pagination';
+import { IPaginateOptions, IPaginateResult } from 'typegoose-cursor-pagination';
+
+import { Cache, CacheContainer } from 'node-ts-cache';
+import { MemoryStorage } from 'node-ts-cache-storage-memory';
+import { FilterQuery } from 'mongoose';
+
+const userCache = new CacheContainer(new MemoryStorage());
 
 export const createTodo = async (input: Partial<Todos>) => {
   const todo = await todosModel.create(input);
   return omit(todo.toJSON());
 };
 
+export const getTodoById = async (id: string) => {
+  return await todosModel.findOne({ _id: id });
+};
+
 export const getTodos = async (
-  query: Dictionary<string>,
+  query: FilterQuery<Todos>,
   options: IPaginateOptions,
 ) => {
-  console.log(query);
-  return await todosModel.findPaged(options, query, {}, []);
+  var cachedTodos;
+  var key;
+  if ('userId' in query) {
+    key = `${query.userId}Todos`;
+  } else {
+    key = 'adminTodos';
+  }
+  cachedTodos = await userCache.getItem<IPaginateResult<Todos>>(key);
+  if (cachedTodos) return cachedTodos;
+  else {
+    const todos = await todosModel.findPaged(options, query, {}, []);
+    await userCache.setItem(key, todos, { ttl: 60 });
+    return todos;
+  }
+
 };
 
 export const editTodo = async (id: string, input: Partial<Todos>) => {
-  return await todosModel.findByIdAndUpdate(id, input);
+  return await todosModel.findOneAndUpdate({ _id: id }, input);
 };
 
 export const toggleTodo = async (id: string, val: boolean) => {

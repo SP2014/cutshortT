@@ -46,6 +46,7 @@
     "@types/lodash": "^4.14.191",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.5",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
@@ -55,6 +56,9 @@
     "morgan": "^1.10.0",
     "prettier": "^2.8.6",
     "rimraf": "^4.4.1",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
     "tsutils": "^3.21.0",
     "typescript": "^5.0.2"
   }

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { IPaginateOptions } from 'typegoose-cursor-pagination';
-import { commentPost, createPost, getAllPosts } from '../services/post.service';
+import { commentPost, createPost, getAllPosts, removePost } from '../services/post.service';
 
 export const addPost = async (
   req: Request,
@@ -20,6 +20,29 @@ export const addPost = async (
   }
 };
 
+export const getUserPosts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const options: IPaginateOptions = {
+    sortField: 'updatedAt',
+    sortAscending: true,
+    limit: 10,
+    next: req.query.next as string,
+  };
+  try {
+    const userId = req.params.userId as string;
+    const allPosts = await getAllPosts(false, options, userId);
+    res.status(200).json({
+      status: 'success',
+      data: allPosts,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getPosts = async (
   req: Request,
   res: Response,
@@ -32,17 +55,14 @@ export const getPosts = async (
     next: req.query.next as string,
   };
   try {
-    //console.log(req.query);
-    const isAdmin = req.query.isAdmin as string;
-    const userId = req.query.userId as string;
-    const admin = isAdmin === 'true' ? true : false;
-
-    const allPosts = await getAllPosts(admin, options, userId);
+    const allPosts = await getAllPosts(true, options, undefined);
     res.status(200).json({
       status: 'success',
       data: allPosts,
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const addComment = async (
@@ -51,12 +71,33 @@ export const addComment = async (
   next: NextFunction,
 ) => {
   try {
-    const comment = await commentPost(req.body);
+    const user = res.locals.user;
+    const pid = req.params.postId as string;
+    var data = req.body;
+    Object.assign(data, { postId: pid, userId: user._id });
+    const comment = await commentPost(data);
     res.status(201).json({
       status: 'success',
       data: {
         comment,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deletePost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    removePost(req.params.postId).then(()=>{
+        res.status(200).json({
+          'status':'success',
+          'msg': 'Post deleted'
+        });
     });
   } catch (error) {
     next(error);

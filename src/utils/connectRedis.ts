@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
 
-const redisUrl = `redis://redis-14706.c16.us-east-1-3.ec2.cloud.redislabs.com:14706`;
-const redisClient = createClient({ url: redisUrl });
+const redisUrl = `redis://localhost:6379`;
+const redisClient = createClient({ url: process.env.REDIS_URL || redisUrl });
 
 const connectRedis = async () => {
   try {

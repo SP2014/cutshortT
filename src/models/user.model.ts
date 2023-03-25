@@ -5,6 +5,7 @@ import {
   modelOptions,
   pre,
   prop,
+  Severity
 } from '@typegoose/typegoose';
 import bcrypt from 'bcryptjs';
 
@@ -20,6 +21,9 @@ import bcrypt from 'bcryptjs';
   schemaOptions: {
     // Add createdAt and updatedAt fields
     timestamps: true,
+  },
+  options: {
+    allowMixed: Severity.ALLOW,
   },
 })
 

@@ -1,32 +1,30 @@
 version: '3.8'
 services:
-  cutshort-docker:
-    environment:
-        NODE_ENV: development
-        REDIS_URL: redis://redis:6379
-    build:
-        context: .
-        dockerfile: Dockerfile
-    env_file:
-      - .env
-    volumes:
-        - ./:/usr/src/app
-    container_name: cutshort-docker
-    expose:
-      - '5000'
-    ports:
-      - '5000:5000'
-    command: yarn dev
-    links:
-      - mongo
-      - redis
-    depends_on:
-      - mongo
-      - redis
-    networks:
-      - cutshort-network
-
-
+  # cutshort-docker:
+  #   environment:
+  #     NODE_ENV: development
+  #     REDIS_URL: redis://redis:6379
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./:/usr/src/app
+  #   container_name: cutshort-docker
+  #   expose:
+  #     - '5000'
+  #   ports:
+  #     - '5000:5000'
+  #   command: yarn dev
+  #   links:
+  #     - mongo
+  #     - redis
+  #   depends_on:
+  #     - mongo
+  #     - redis
+  #   networks:
+  #     - cutshort-network
 
   mongo:
     image: mongo:latest

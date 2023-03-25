@@ -1,8 +1,10 @@
 import {
   getModelForClass,
+  index,
   modelOptions,
   plugin,
   prop,
+  Severity
 } from '@typegoose/typegoose';
 import paginationPlugin, { PaginateModel } from 'typegoose-cursor-pagination';
 import Comments from './comments.model';
@@ -12,8 +14,12 @@ import Comments from './comments.model';
     // Add createdAt and updatedAt fields
     timestamps: true,
   },
+  options: {
+    allowMixed: Severity.ALLOW,
+  },
 })
 @plugin(paginationPlugin)
+@index({authorId: 1})
 export class Post {
   @prop({ required: true })
   text: string;

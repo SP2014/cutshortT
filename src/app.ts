@@ -11,7 +11,6 @@ import todosRouter from './routes/todos.route';
 import postsRouter from './routes/post.route';
 //import router from "./routes";
 
-
 const app = express();
 
 // Middleware
@@ -66,3 +65,5 @@ app.listen(port, () => {
   console.log(`Server started on port: ${port}`);
   connectDB();
 });
+
+export default app;
