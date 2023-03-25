@@ -16,74 +16,36 @@ Running `yarn install` will get all dependencies installed. After completed run 
 ### This is only a sample api to explore the boilerplate. You can also create your own API based on your requirements.
 
 #### Development
-https://tsnode-rest-dev.herokuapp.com/
+http://localhost:5000/api
 
-#### Production
-https://tsnode-rest-prod.herokuapp.com/
-
-### REDIS
-#### Create
-```
-Endpoint: /redis/insert
-Method: POST
-Request:
-  {
-    key: 'my-key',
-    value: ['value1', 'value2']
-  }
-```
-#### Get
-```
-Endpoint: /redis/:key
-Method: GET
-```
-
-### CLIENT
-#### Login
-```
-Endpoint: /login
-Method: POST
-Request:
-  {
-    username: '',
-    password: ''
-  }
-```
-#### Profile
-```
-Endpoint: /profile
-Authorization: Bearer <TOKEN FROM LOGIN>
-Method: GET
-```
-
-### ADMIN
-#### Login
-```
-Endpoint: /login/admin
-Method: POST
-Request:
-  {
-    username: '',
-    password: ''
-  }
-```
-#### Profile
-```
-Endpoint: /profile/admin
-Authorization: Bearer <TOKEN FROM LOGIN>
-Method: GET
-```
-
-
+### Authentication
 
 #### Register
 ```
-Endpoint: /register
+Endpoint: /auth/register
 Method: POST
 Request:
   {
-    username: '',
+    email: '',
+    name: '',
     password: '',
-    scope: '' <- ADMIN or CLIENT
+    passwordConfirm: ''
   }
+```
+
+#### Login
+```
+Endpoint: /auth/login
+Method: POST
+Request:
+  {
+    email: '',
+    password: ''
+  }
+```
+#### Profile
+```
+Endpoint: /me
+Authorization: Bearer <TOKEN FROM LOGIN>
+Method: GET
 ```
