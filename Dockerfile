@@ -6,7 +6,8 @@ WORKDIR /app
 #COPY build ./build
 COPY . /app
 
-RUN yarn install --frozen-lockfile --production
+#RUN yarn install --frozen-lockfile --production
+RUN yarn install
 
 EXPOSE 5000
 
