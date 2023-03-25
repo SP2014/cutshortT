@@ -13,7 +13,6 @@ Running `yarn install` will get all dependencies installed. After completed run 
 > yarn prettier
 
 ## Demo
-### This is only a sample api to explore the boilerplate. You can also create your own API based on your requirements.
 
 #### Development
 http://localhost:5000/api
