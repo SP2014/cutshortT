@@ -19,7 +19,6 @@ Running `yarn install` will get all dependencies installed. After completed run 
 http://localhost:5000/api
 
 ### Authentication
-
 #### Register
 ```
 Endpoint: /auth/register
@@ -60,7 +59,6 @@ Method: GET
 ```
 
 ### Todos
-
 #### Create
 ```
 Endpoint: /api/todos
@@ -99,10 +97,45 @@ Method: GET
 #### Get Todo for user
 ```
 Endpoint: /api/todos/user/{userId}
+Method: GET
+```
+
+### Posts
+#### Create
+```
+Endpoint: /api/posts
 Method: POST
 Request:
   {
-    title: '',
-    description: ''
+    text: ''
   }
 ```
+
+#### Comment
+```
+Endpoint: /api/posts/{postId}/comment
+Method: POST
+Request:
+  {
+    text: ''
+  }
+```
+
+#### Get All Posts (Admin prevelige)
+```
+Endpoint: /api/posts
+Method: GET
+```
+
+#### Get Posts for user
+```
+Endpoint: /api/posts/user/{userId}
+Method: GET
+```
+
+#### Delete
+```
+Endpoint: /api/posts/{postId}
+Method: DELETE
+```
+
