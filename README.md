@@ -15,7 +15,7 @@ Running `yarn install` will get all dependencies installed. After completed run 
 ## Demo
 
 #### Development
-http://localhost:5000/api
+http://159.89.173.56:5000/api
 
 ### Authentication
 #### Register
