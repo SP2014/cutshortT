@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-   cutshort-docker:
+  cutshort-docker:
      environment:
        NODE_ENV: development
        REDIS_URL: redis://redis:6379
@@ -27,40 +27,42 @@ services:
        - cutshort-network
 
   mongo:
-    image: mongo:latest
-    container_name: mongo_v
-    restart: unless-stopped
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root123
-      - DB_NAME=cutshort
-      - DB_USER=root
-      - DB_PASSWORD=root123
-    env_file:
-      - ./.env
-    volumes:
-      - mongo:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
-    ports:
-      - '27017:27017'
-    command: [--auth]
-    networks:
-      - cutshort-network
-
+      image: mongo:latest
+      container_name: mongo_v
+      restart: unless-stopped
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=root123
+        - DB_NAME=cutshort
+        - DB_USER=root
+        - DB_PASSWORD=root123
+      env_file:
+        - ./.env
+      volumes:
+        - mongo:/data/db
+        - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+      ports:
+        - '27017:27017'
+      command: [--auth]
+      networks:
+        - cutshort-network
   redis:
-    image: redis:latest
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
-    container_name: redis_u
-    ports:
-      - '6379:6379'
-    volumes:
-      - redis:/data
-    restart: always
-    entrypoint: redis-server --appendonly yes
-    networks:
-      - cutshort-network
+      image: redis:latest
+      environment:
+        - ALLOW_EMPTY_PASSWORD=yes
+        - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+      container_name: redis_u
+      ports:
+        - '6379:6379'
+      volumes:
+        - redis:/data
+      restart: always
+      entrypoint: redis-server --appendonly yes
+      networks:
+        - cutshort-network
+    
+
+    
 
 volumes:
   mongo:
